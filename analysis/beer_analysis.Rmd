@@ -1,0 +1,64 @@
+---
+title: "beer_analysis"
+author: "Jostein Barry-Straume"
+date: "7/1/2017"
+output: html_document
+---
+
+```{r echo=TRUE}
+beer <- read.csv("/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/data/Beers.csv", header=TRUE, stringsAsFactors = TRUE)
+
+breweries <- read.csv("/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/data/Breweries.csv", header=TRUE, stringsAsFactors = TRUE)
+
+str(beer)
+
+str(breweries)
+
+# Question 1: How many breweries are present in each state?
+library(plyr)
+breweries_by_state <- count(breweries, "State")
+breweries_by_state
+
+# Setting values so each state displays properly in the bar plot
+par(las=2)
+par(mar=c(5,8,4,2))
+
+# Don't use this one
+plot(breweries_by_state, ylab = "Frequency", xlab = "State", main = "Number of Breweries per State", col = "blue", cex.names = 0.2)
+
+# Use this one
+barplot(breweries_by_state$freq, xlab = "Frequency", ylab = "State", main = "Number of Breweries by State", horiz = TRUE, names.arg = breweries_by_state$State, cex.names = 0.2, col = "blue", xlim = c(0, 50))
+
+# Question 2: Merge beer data with breweries data by brewery id.
+# Print first 6 observations and the last six observations to check the merged file.
+beer_and_breweries <- merge(beer, breweries, by.x = "Brewery_id", by.y = "Brew_ID", all = TRUE, sort = TRUE)
+str(beer_and_breweries)
+
+# Printing the first six observations.
+head(beer_and_breweries, n = 6)
+
+# Printing the last six observations.
+tail(beer_and_breweries, n = 6)
+
+
+# Question 3: Report the number of NA’s in each column.
+na_counts <- sapply(beer_and_breweries, function(y) sum(is.na(y)))
+na_counts
+plot(na_counts)
+
+
+median(beer_and_breweries$ABV, na.rm = TRUE)
+
+attach(beer_and_breweries)
+aggregate(ABV ~ State, data = beer_and_breweries, summary)
+
+aggregate(IBU ~ State, data = beer_and_breweries, summary)
+
+median_by_state <- aggregate(ABV ~ State, data = beer_and_breweries, summary)
+results <- median_by_state$ABV
+medians_abv <- results[,3]
+
+medians_abv <- results[,3]
+
+
+```
