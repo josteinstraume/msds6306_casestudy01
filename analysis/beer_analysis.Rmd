@@ -2,7 +2,7 @@
 title: "beer_analysis"
 author: "Jostein Barry-Straume"
 date: "7/1/2017"
-output: html_document
+output: html_document:
 ---
 
 ```{r echo=TRUE}
