@@ -23,11 +23,8 @@ breweries_by_state
 par(las=2)
 par(mar=c(5,8,4,2))
 
-# Don't use this one
-plot(breweries_by_state, ylab = "Frequency", xlab = "State", main = "Number of Breweries per State", col = "blue", cex.names = 0.2)
-
-# Use this one
-barplot(breweries_by_state$freq, xlab = "Frequency", ylab = "State", main = "Number of Breweries by State", horiz = TRUE, names.arg = breweries_by_state$State, cex.names = 0.2, col = "blue", xlim = c(0, 50))
+# Barplot of number of breweries in each state
+barplot(breweries_by_state$freq, xlab = "Frequency", ylab = "State", main = "Number of Breweries by State", horiz = TRUE, names.arg = breweries_by_state$State, cex.names = 0.3, col = "blue", xlim = c(0, 50))
 
 # Question 2: Merge beer data with breweries data by brewery id.
 # Print first 6 observations and the last six observations to check the merged file.
@@ -46,6 +43,8 @@ na_counts <- sapply(beer_and_breweries, function(y) sum(is.na(y)))
 na_counts
 plot(na_counts)
 
+# Question 4: Compute the median alcohol content and international
+# bitterness unit for each state. Plot a bar chart to compare.
 
 median(beer_and_breweries$ABV, na.rm = TRUE)
 
@@ -54,11 +53,62 @@ aggregate(ABV ~ State, data = beer_and_breweries, summary)
 
 aggregate(IBU ~ State, data = beer_and_breweries, summary)
 
-median_by_state <- aggregate(ABV ~ State, data = beer_and_breweries, summary)
-results <- median_by_state$ABV
-medians_abv <- results[,3]
+# Ouputs summary statistics of alcohol by volume for each state
+median_abv_state <- aggregate(ABV ~ State, data = beer_and_breweries, summary)
 
-medians_abv <- results[,3]
+# Extracting the median values from the aggregate output.
+results_abv <- median_abv_state$ABV
+medians_abv <- results_abv[,3]
+
+# Barplot listing the median alcohol content of beer for each state.
+barplot(medians_abv, xlab = "Alochol By Volume", ylab = "State", main = "Median ABV by State", horiz = TRUE, names.arg = median_abv_state$State, cex.names = 0.3, col = "blue", xlim = c(0, 0.07))
+
+# Outputs summary statistics of internation bitterness units for each state
+median_ibu_state <- aggregate(IBU ~ State, data = beer_and_breweries, summary)
+
+# Extracting the median values from the aggregate output.
+results_ibu <- median_ibu_state$IBU
+medians_ibu <- results_ibu[,3]
+medians_ibu
+max(medians_ibu)
+
+# Barplot listing the median international bitterness units of beer for each state.
+barplot(medians_ibu, xlab = "International Bitterness Units", ylab = "State", main = "Median IBU by State", horiz = TRUE, names.arg = median_ibu_state$State, cex.names = 0.3, col = "green")
 
 
+# Question 5:
+# Which state has the maximum alcoholic beer?
+# Which state has the most bitter beer?
+
+# Calculate max ABV of each state
+max_abv <- aggregate(ABV ~ State, data = beer_and_breweries, function(x) max(x))
+
+# Pull the index of the overall maximum ABV and
+# return the corresponding row displaying the respective state
+max_abv[which.max(max_abv$ABV),]
+
+# Calculate max IBU of each state
+max_ibu <- aggregate(IBU ~ State, data = beer_and_breweries, function(x) max(x))
+
+# Pull the index of the overall maximum IBU and
+# return the corresponding row displaying the respective state
+max_ibu[which.max(max_ibu$IBU),]
+
+# Question 6:
+# Summary statistics for ABV (Alcohol by volume) variable
+
+# Summary statistics for ABV by state
+aggregate(ABV ~ State, data = beer_and_breweries, summary)
+# Overall summary statistics for ABV
+summary(beer_and_breweries$ABV)
+
+# Question 7:
+# Is there a relationship between the bitterness of the beer
+# and its alcoholic content? Draw a scatter plot.
+
+cor(IBU, ABV, use = "complete.obs")	 #if you ONLY need the sample correlation
+cor.test(IBU, ABV)  #for test for whether correlation is 0 (H0) or not 0 (Ha) and CI.  Also gives sample correlation.
+
+plot(IBU, ABV, pch=23, col="blue", bg="red", lwd=2)	#pch changes point shape, col changes the color 
+abline(lm(ABV~IBU), col="darkgray", lwd=2)  #adds a trend line (least squares regression line) to the plot, lwd changes line thickness (default is 1)
 ```
