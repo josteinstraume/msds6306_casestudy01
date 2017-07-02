@@ -10,11 +10,11 @@
 3. Analysis
 
 ## Introduction
-![Source: CraftBeer.com](/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/analysis/2016_BA_growth.png)
+![Source: CraftBeer.com](msds6306_casestudy01/analysis/2016_BA_growth.png?raw=true)
 
 > The craft beer industry continues its growth nationally, albeit with decaying rates. This is indicative that the market surrounding craft beer has reached maturity. As the craft beer industry comes of age, in order to maintain a competitive advantage in a saturated market it is important for breweries to make informed decisions regarding their selection of offerings to customers.
 
-![Source: BrewersAssociation.org](/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/analysis/Sales_2016.png)
+![Source: BrewersAssociation.org](msds6306_casestudy01/analysis/Sales_2016.png?raw=true)
 
 > While the amount of beer spilled from the productions lines of Anheuser Busch is greater than total volume of beer Samuel Adams produces, the craft beer industry still has a significant foothold in overall beer sales. Brewers Association reports that not only has production of craft beer increased 6.2% in 2016, but exports of craft beer have increased by 4.4% as well.
 
