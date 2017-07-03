@@ -4,8 +4,50 @@ author: "Jostein Barry-Straume"
 date: "7/1/2017"
 output: html_document
 ---
+# Craft Beers and Breweries in the USA
+## By [Jostein Barry-Straume](https://github.com/josteinstraume)
 
-# Import data sets and look at their structures
+[Data Science @ Southern Methodist University](https://datascience.smu.edu/)
+
+# Table of Contents
+1. Introduction
+2. Data sets descriptions
+    + Variable names
+3. Analysis
+4. Conclusion
+
+# Introduction
+![Source: CraftBeer.com](/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/analysis/2016_BA_growth.png)
+
+> The craft beer industry continues its growth nationally, albeit with decaying rates. This is indicative that the market surrounding craft beer has reached maturity. As the craft beer industry comes of age, in order to maintain a competitive advantage in a saturated market it is important for breweries to make informed decisions regarding their selection of offerings to customers.
+
+![Source: BrewersAssociation.org](/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/analysis/Sales_2016.png)
+
+> While the amount of beer spilled from the productions lines of Anheuser Busch is greater than total volume of beer Samuel Adams produces, the craft beer industry still has a significant foothold in overall beer sales. Brewers Association reports that not only has production of craft beer increased 6.2% in 2016, but exports of craft beer have increased by 4.4% as well.
+
+> In this report we will delve into the distribution of breweries across the USA, and the composition of their respective beers offered. In particular, the relationship between International Bitterness Units and Alcohol by Volume will explored. Additionally, insight into customer preferences will be brought to light by discerning from which states the most potent and most bitter beers are brewed.
+
+# Data set descriptions
+> Beers data set contains a list of 2410 US craft beers
+> Breweries data set contains 558 US breweries. The variable names and their descriptions are as follows.
+
+* Beers.csv:
+    + Name: Name of the beer.
+    + Beer ID: Unique identifier of the beer.
+    + ABV: Alcohol by volume of the beer.
+    + IBU: International Bitterness Units of the beer.
+    + Brewery ID: Brewery id associated with the beer.
+    + Style: Style of the beer.
+    + Ounces: Ounces of beer.
+
+* Breweries.csv:
+    + Brew ID: Unique identifier of the brewery.
+    + Name: Name of the brewery.
+    + City: City where the brewery is located.
+    + State: State where the brewery is located.
+    
+# Analysis
+## Import data sets and look at their structures
 ```{r echo=TRUE}
 beer <- read.csv("/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/data/Beers.csv", header=TRUE, stringsAsFactors = TRUE)
 
@@ -17,7 +59,7 @@ str(breweries)
 ```
 
 
-# How many breweries are present in each state?
+## How many breweries are present in each state?
 > Count the number of breweries by state, and then use that as a basis for a barplot in order to visually discern the distributions of breweries among states.
 
 ```{r echo=TRUE}
@@ -35,7 +77,7 @@ barplot(breweries_by_state$freq, xlab = "Frequency", ylab = "State", main = "Num
 
 > It would appear that the amount of breweries in a given state ranges from as few as one, to as many as 47.
 
-# Merge data sets
+## Merge data sets
 > Merge the beer data set with the breweries data set by Brewery ID.
 > Print first 6 observations and the last six observations to validate that the merging of data sets was done correctly.
 
@@ -53,7 +95,7 @@ tail(beer_and_breweries, n = 6)
 
 > The beer data set and the breweries data set have now been merged to create the beer_and_breweries data set.
 
-# Reporting NA values
+## Reporting NA values
 > Report the number of NA’s in each column.
 
 ```{r echo=TRUE}
@@ -64,7 +106,7 @@ na_counts
 
 > The Alcohol by Volume column of the data set contains 62 NA values, whereas the International Bitterness Units column contains a staggering 1005 NA values. I suspect the explanation behind these missing values is because calculating a beer's "metadata" requires extra steps in the brewing process, as well as additional gear to figure out the bitterness of a craft beer.
 
-# Exploring ABV and IBU for each state
+## Exploring ABV and IBU for each state
 > Compute the median alcohol content and international bitterness unit for each state. Plot a bar chart to compare.
 
 ```{r echo=TRUE}
@@ -79,7 +121,7 @@ par(las=2)
 par(mar=c(5,8,4,2))
 
 # Barplot listing the median alcohol content of beer for each state.
-barplot(median_abv_state$ABV, xlab = "Alcohol By Volume", ylab = "State", main = "Median ABV by State", horiz = TRUE, names.arg = median_abv_state$State, cex.names = 0.3, col = "blue", xlim = c(0, 0.07))
+barplot(median_abv_state$ABV, xlab = "Alcohol By Volume", ylab = "State", main = "Median ABV by State", horiz = TRUE, names.arg = median_abv_state$State, cex.names = 0.3, col = "orange", xlim = c(0, 0.07))
 
 # Ouputs medians of international bitterness units for each state.
 median_ibu_state <- aggregate(IBU ~ State, data = beer_and_breweries, median)
@@ -90,7 +132,7 @@ barplot(median_ibu_state$IBU, xlab = "International Bitterness Units", ylab = "S
 
 > It would appear that Utah has the lowest median of alcohol by volume, whereas Wisconsin has the lowest median of international bitterness units.
 
-# Beers that pack a punch
+## Beers that pack a punch
 > Which state has the maximum alcoholic beer? Which state has the most bitter beer?
 
 ```{r echo=TRUE}
@@ -111,7 +153,7 @@ max_ibu[which.max(max_ibu$IBU),]
 
 > Colorado brews the strongest beer, whereas Oregon produces the most bitter beer.
 
-# Overview of Alcohol by Volume
+## Overview of Alcohol by Volume
 > Summary statistics for ABV (Alcohol by Volume) variable
 
 ```{r echo=TRUE}
@@ -127,7 +169,7 @@ boxplot(ABV)
 
 > The distribution of Alcohol by Volume is right skewed. This fact is confirmed by both the summary statistics and the boxplot of the data. The summary statistics tell us that the mean is larger than the median. Likewise, the boxplot contains numerous potential outliers for beers with a larger ABV value.
 
-# Exploring the relationship between IBU and ABV 
+## Exploring the relationship between IBU and ABV 
 > Is there a relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.
 
 ```{r echo=TRUE}
@@ -152,3 +194,25 @@ abline(lm(ABV~IBU), col = "darkgray", lwd = 2)
 > A correlation coefficient of 0.6706215 indicates a moderate-to-strong positive relationship between International Bitterness Units and Alcohol by Volume.
 
 > We are 95% confident that the correlation coefficient between IBU and ABV is between 0.6407982 and 0.6984238. With a resulting p-value that is less than 2.2e-16, we reject the null hypothesis. In other words, the data is highly unplausible under the null hypothesis, so we have reason to believe that there is not a zero correlation relationship between International Bitterness Units and Alcohol by Volume.
+
+# Conclusion
+> Summary of findings from this report.
+
+* The amount of breweries in a given state ranges from as few as one, to as many as 47.
+* Merging the beer data set with the breweries data set results in:
+    + 62 NA values for Alcohol by Volume.
+    + 1005 NA values for International Bitterness Units.
+* Utah has the lowest median of alcohol by volume, whereas Wisconsin has the lowest median of international bitterness units.
+* Colorado brews the strongest beer, whereas Oregon produces the most bitter beer.
+* Summary statistics of Alcohol by Volume:
+    + Min = 0.00100.
+    + 1st Quartile = 0.05000.
+    + Median = 0.05600.
+    + Mean = 0.05977.
+    + 3rd Quartile = 0.06700.
+    + Max = 0.12800.
+    + Distribution = Right-skewed.
+* Relationship between International Bitterness Units and Alcohol by Volume:
+    + Moderate-to-strong positive linear relationship.
+    + Correlation Coefficient = 0.6706215.
+    + 95% Confidence Interval for Correlation Coefficient = [0.6407982, 0.6984238].
