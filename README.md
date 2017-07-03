@@ -5,7 +5,7 @@
 
 ## Table of Contents
 1. Introduction
-2. Datasets descriptions
+2. Data sets descriptions
     + Variable names
 3. Analysis
 
@@ -21,8 +21,8 @@
 > In this report we will delve into the distribution of breweries across the USA, and the composition of their respective beers offered. In particular, the relationship between International Bitterness Units and Alcohol by Volume will explored. Additionally, insight into customer preferences will be brought to light by discerning from which states the most potent and most bitter beers are brewed.
 
 ## Data set descriptions
-> Beers dataset contains a list of 2410 US craft beers
-> Breweries dataset contains 558 US breweries. The variable names and their descriptions are as follows.
+> Beers data set contains a list of 2410 US craft beers
+> Breweries data set contains 558 US breweries. The variable names and their descriptions are as follows.
 
 * Beers.csv:
     + Name: Name of the beer.
