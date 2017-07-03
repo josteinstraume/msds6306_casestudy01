@@ -2,9 +2,10 @@
 title: "beer_analysis"
 author: "Jostein Barry-Straume"
 date: "7/1/2017"
-output: html_document:
+output: html_document
 ---
 
+# Import data sets and look at their structures
 ```{r echo=TRUE}
 beer <- read.csv("/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/msds6306_casestudy01/data/Beers.csv", header=TRUE, stringsAsFactors = TRUE)
 
@@ -13,21 +14,33 @@ breweries <- read.csv("/Users/Jostein/Grad School/SMU/Doing_Data_Science/unit_8/
 str(beer)
 
 str(breweries)
+```
 
-# Question 1: How many breweries are present in each state?
+
+# How many breweries are present in each state?
+> Count the number of breweries by state, and then use that as a basis for a barplot in order to visually discern the distributions of breweries among states.
+
+```{r echo=TRUE}
 library(plyr)
 breweries_by_state <- count(breweries, "State")
 breweries_by_state
 
-# Setting values so each state displays properly in the bar plot
+# Setting values so each state displays properly in the bar plot.
 par(las=2)
 par(mar=c(5,8,4,2))
 
-# Barplot of number of breweries in each state
+# Barplot of number of breweries in each state.
 barplot(breweries_by_state$freq, xlab = "Frequency", ylab = "State", main = "Number of Breweries by State", horiz = TRUE, names.arg = breweries_by_state$State, cex.names = 0.3, col = "blue", xlim = c(0, 50))
+```
 
-# Question 2: Merge beer data with breweries data by brewery id.
-# Print first 6 observations and the last six observations to check the merged file.
+> It would appear that the amount of breweries in a given state ranges from as few as one, to as many as 47.
+
+# Merge data sets
+> Merge the beer data set with the breweries data set by Brewery ID.
+> Print first 6 observations and the last six observations to validate that the merging of data sets was done correctly.
+
+```{r echo=TRUE}
+# Merging the beer data set and the breweries data set by Brewery ID.
 beer_and_breweries <- merge(beer, breweries, by.x = "Brewery_id", by.y = "Brew_ID", all = TRUE, sort = TRUE)
 str(beer_and_breweries)
 
@@ -36,50 +49,51 @@ head(beer_and_breweries, n = 6)
 
 # Printing the last six observations.
 tail(beer_and_breweries, n = 6)
+```
 
+> The beer data set and the breweries data set have now been merged to create the beer_and_breweries data set.
 
-# Question 3: Report the number of NA’s in each column.
+# Reporting NA values
+> Report the number of NA’s in each column.
+
+```{r echo=TRUE}
+# Using the Sapply function we can easily count the number of NA values per column in the data set.
 na_counts <- sapply(beer_and_breweries, function(y) sum(is.na(y)))
 na_counts
-plot(na_counts)
+```
 
-# Question 4: Compute the median alcohol content and international
-# bitterness unit for each state. Plot a bar chart to compare.
+> The Alcohol by Volume column of the data set contains 62 NA values, whereas the International Bitterness Units column contains a staggering 1005 NA values. I suspect the explanation behind these missing values is because calculating a beer's "metadata" requires extra steps in the brewing process, as well as additional gear to figure out the bitterness of a craft beer.
 
-median(beer_and_breweries$ABV, na.rm = TRUE)
+# Exploring ABV and IBU for each state
+> Compute the median alcohol content and international bitterness unit for each state. Plot a bar chart to compare.
 
+```{r echo=TRUE}
+# Attaching merged data set to more easily refer to while performing analysis.
 attach(beer_and_breweries)
-aggregate(ABV ~ State, data = beer_and_breweries, summary)
 
-aggregate(IBU ~ State, data = beer_and_breweries, summary)
+# Ouputs medians of alcohol by volume for each state.
+median_abv_state <- aggregate(ABV ~ State, data = beer_and_breweries, median)
 
-# Ouputs summary statistics of alcohol by volume for each state
-median_abv_state <- aggregate(ABV ~ State, data = beer_and_breweries, summary)
-
-# Extracting the median values from the aggregate output.
-results_abv <- median_abv_state$ABV
-medians_abv <- results_abv[,3]
+# Setting values so each state displays properly in the bar plot.
+par(las=2)
+par(mar=c(5,8,4,2))
 
 # Barplot listing the median alcohol content of beer for each state.
-barplot(medians_abv, xlab = "Alochol By Volume", ylab = "State", main = "Median ABV by State", horiz = TRUE, names.arg = median_abv_state$State, cex.names = 0.3, col = "blue", xlim = c(0, 0.07))
+barplot(median_abv_state$ABV, xlab = "Alcohol By Volume", ylab = "State", main = "Median ABV by State", horiz = TRUE, names.arg = median_abv_state$State, cex.names = 0.3, col = "blue", xlim = c(0, 0.07))
 
-# Outputs summary statistics of internation bitterness units for each state
-median_ibu_state <- aggregate(IBU ~ State, data = beer_and_breweries, summary)
-
-# Extracting the median values from the aggregate output.
-results_ibu <- median_ibu_state$IBU
-medians_ibu <- results_ibu[,3]
-medians_ibu
-max(medians_ibu)
+# Ouputs medians of international bitterness units for each state.
+median_ibu_state <- aggregate(IBU ~ State, data = beer_and_breweries, median)
 
 # Barplot listing the median international bitterness units of beer for each state.
-barplot(medians_ibu, xlab = "International Bitterness Units", ylab = "State", main = "Median IBU by State", horiz = TRUE, names.arg = median_ibu_state$State, cex.names = 0.3, col = "green")
+barplot(median_ibu_state$IBU, xlab = "International Bitterness Units", ylab = "State", main = "Median IBU by State", horiz = TRUE, names.arg = median_ibu_state$State, cex.names = 0.3, col = "green")
+```
 
+> It would appear that Utah has the lowest median of alcohol by volume, whereas Wisconsin has the lowest median of international bitterness units.
 
-# Question 5:
-# Which state has the maximum alcoholic beer?
-# Which state has the most bitter beer?
+# Beers that pack a punch
+> Which state has the maximum alcoholic beer? Which state has the most bitter beer?
 
+```{r echo=TRUE}
 # Calculate max ABV of each state
 max_abv <- aggregate(ABV ~ State, data = beer_and_breweries, function(x) max(x))
 
@@ -93,22 +107,48 @@ max_ibu <- aggregate(IBU ~ State, data = beer_and_breweries, function(x) max(x))
 # Pull the index of the overall maximum IBU and
 # return the corresponding row displaying the respective state
 max_ibu[which.max(max_ibu$IBU),]
+```
 
-# Question 6:
-# Summary statistics for ABV (Alcohol by volume) variable
+> Colorado brews the strongest beer, whereas Oregon produces the most bitter beer.
 
+# Overview of Alcohol by Volume
+> Summary statistics for ABV (Alcohol by Volume) variable
+
+```{r echo=TRUE}
 # Summary statistics for ABV by state
 aggregate(ABV ~ State, data = beer_and_breweries, summary)
+
 # Overall summary statistics for ABV
-summary(beer_and_breweries$ABV)
+summary(ABV)
 
-# Question 7:
-# Is there a relationship between the bitterness of the beer
-# and its alcoholic content? Draw a scatter plot.
-
-cor(IBU, ABV, use = "complete.obs")	 #if you ONLY need the sample correlation
-cor.test(IBU, ABV)  #for test for whether correlation is 0 (H0) or not 0 (Ha) and CI.  Also gives sample correlation.
-
-plot(IBU, ABV, pch=23, col="blue", bg="red", lwd=2)	#pch changes point shape, col changes the color 
-abline(lm(ABV~IBU), col="darkgray", lwd=2)  #adds a trend line (least squares regression line) to the plot, lwd changes line thickness (default is 1)
+# Box and whisker plot of ABV
+boxplot(ABV)
 ```
+
+> The distribution of Alcohol by Volume is right skewed. This fact is confirmed by both the summary statistics and the boxplot of the data. The summary statistics tell us that the mean is larger than the median. Likewise, the boxplot contains numerous potential outliers for beers with a larger ABV value.
+
+# Exploring the relationship between IBU and ABV 
+> Is there a relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.
+
+```{r echo=TRUE}
+# Output correlation coefficient.
+cor(IBU, ABV, use = "complete.obs")
+
+# Test for whether correlation is 0 (H0) or not 0 (Ha) and CI.
+# Also gives sample correlation.
+cor.test(IBU, ABV)
+
+# Scatter plot of the relationship between IBU and ABV
+plot(IBU, ABV, pch = 23, col = "blue", bg = "red", lwd = 2, main = "The relationship between IBU and ABV")
+
+# Adding a trend line (least squares regression line) to the plot.
+abline(lm(ABV~IBU), col = "darkgray", lwd = 2)
+```
+
+> Null Hypothesis: The correlation between IBU and ABV is zero.
+
+> Alternative Hypothesis: The correlation between IBU and ABV is not zero.
+
+> A correlation coefficient of 0.6706215 indicates a moderate-to-strong positive relationship between International Bitterness Units and Alcohol by Volume.
+
+> We are 95% confident that the correlation coefficient between IBU and ABV is between 0.6407982 and 0.6984238. With a resulting p-value that is less than 2.2e-16, we reject the null hypothesis. In other words, the data is highly unplausible under the null hypothesis, so we have reason to believe that there is not a zero correlation relationship between International Bitterness Units and Alcohol by Volume.
