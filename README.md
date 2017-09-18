@@ -18,7 +18,7 @@
 
 > While the amount of beer spilled from the productions lines of Anheuser Busch is greater than total volume of beer Samuel Adams produces, the craft beer industry still has a significant foothold in overall beer sales. Brewers Association reports that not only has production of craft beer increased 6.2% in 2016, but exports of craft beer have increased by 4.4% as well.
 
-> In this report we will delve into the distribution of breweries across the USA, and the composition of their respective beers offered. In particular, the relationship between International Bitterness Units and Alcohol by Volume will explored. Additionally, insight into customer preferences will be brought to light by discerning from which states the most potent and most bitter beers are brewed.
+> In this report we will delve into the distribution of breweries across the USA, and the composition of their respective beers offered. In particular, the relationship between International Bitterness Units and Alcohol by Volume will be explored. Additionally, insight into customer preferences will be brought to light by discerning from which states the most potent and most bitter beers are brewed.
 
 ## Data set descriptions
 > Beers data set contains a list of 2410 US craft beers
@@ -38,6 +38,6 @@
     + Name: Name of the brewery.
     + City: City where the brewery is located.
     + State: State where the brewery is located.
-    
+
 ## Analysis
 [Please refer to the analysis section.](https://github.com/josteinstraume/msds6306_casestudy01/blob/master/analysis/beer_analysis.Rmd)
